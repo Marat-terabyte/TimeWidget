@@ -11,14 +11,22 @@
         WindowStyle="None"
         Height="170" Width="350"
         Activated="WindowActivated"
-        Loaded="WindowLoaded">
+        Loaded="WindowLoaded"
+        Background="{Binding BackgroundColor}">
     
     <Window.DataContext>
         <viewmodels:MainWindowVM></viewmodels:MainWindowVM>
     </Window.DataContext>
 
-    <Grid>
-        
+    <Grid MouseDown="MoveWindow">
+        <TextBlock 
+            FontSize="73"
+            Foreground="{Binding ForegroundColor}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Margin="0 0 0 65"
+            Text="{Binding CurrentTime}">
+        </TextBlock>
     </Grid>
     
 </Window>
