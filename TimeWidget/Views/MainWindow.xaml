@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TimeWidget" xmlns:viewmodels="clr-namespace:TimeWidget.ViewModels"
+        xmlns:viewmodels="clr-namespace:TimeWidget.ViewModels"
         mc:Ignorable="d"
         ShowInTaskbar="False"
         AllowsTransparency="True"
@@ -19,6 +19,34 @@
     </Window.DataContext>
 
     <Grid MouseDown="MoveWindow">
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Часовой пояс">
+                    <MenuItem Header="UTC">
+                        <MenuItem Header="UTC-1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC-1"/>
+                        <MenuItem Header="UTC"   Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC"/>
+                        <MenuItem Header="UTC+1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC+1"/>
+                        <MenuItem Header="UTC+2" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC+2"/>
+                        <MenuItem Header="UTC+3" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC+3"/>
+                    </MenuItem>
+
+                    <MenuItem Header="Россия">
+                        <MenuItem Header="МСК-1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК-1"/>
+                        <MenuItem Header="МСК"   Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК"/>
+                        <MenuItem Header="МСК+1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+1"/>
+                        <MenuItem Header="МСК+2" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+2"/>
+                        <MenuItem Header="МСК+3" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+3"/>
+                        <MenuItem Header="МСК+4" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+4"/>
+                        <MenuItem Header="МСК+5" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+5"/>
+                        <MenuItem Header="МСК+6" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+6"/>
+                        <MenuItem Header="МСК+7" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+7"/>
+                        <MenuItem Header="МСК+8" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+8"/>
+                        <MenuItem Header="МСК+9" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+9"/>
+                    </MenuItem>
+                </MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
+        
         <TextBlock 
             FontSize="73"
             Foreground="{Binding ForegroundColor}"

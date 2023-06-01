@@ -1,4 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.IO;
+using System.Text.Json;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace TimeWidget.Models
 {
@@ -45,6 +49,17 @@ namespace TimeWidget.Models
                 else
                     _timeZone = value;
             }
+        }
+
+        public void RewriteConfigFile()
+        {
+            Task.Run(() =>
+            {
+                string json = JsonSerializer.Serialize<Config>(this, new JsonSerializerOptions() { WriteIndented = true });
+
+                using (FileStream fs = new FileStream("appsettings.json", FileMode.Truncate))
+                    fs.Write(Encoding.UTF8.GetBytes(json), 0, json.Length);
+            });
         }
     }
 }

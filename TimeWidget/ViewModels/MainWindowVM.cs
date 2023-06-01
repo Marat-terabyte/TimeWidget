@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Collections.Generic;
 using TimeWidget.Models;
 using System.Windows.Media;
+using System.Windows;
 
 namespace TimeWidget.ViewModels
 {
@@ -19,6 +20,8 @@ namespace TimeWidget.ViewModels
 
         public Brush ForegroundColor { get; set; }
         public Brush BackgroundColor { get; set; }
+
+        public RelayCommand SetTimeZoneCommand { get; set; }
 
         public string? CurrentTime
         {
@@ -32,6 +35,8 @@ namespace TimeWidget.ViewModels
 
         public MainWindowVM()
         {
+            SetTimeZoneCommand = new RelayCommand(o => SetTimeZone((string) o));
+
             _config = LoadAppSettings();
 
             ForegroundColor = (new BrushConverter().ConvertFromString(_config.ForegroundColor) as Brush)!;
@@ -58,16 +63,25 @@ namespace TimeWidget.ViewModels
         {
             var TimeZones = new Dictionary<string, int>
             {
-                { "UTC", 0 },
-                { "МСК-1", 2 },  { "МСК", 3 },
-                { "МСК+1", 4 },  { "МСК+2", 5 },
-                { "МСК+3", 6 },  { "МСК+4", 7 },
-                { "МСК+5", 8 },  { "МСК+6", 9 },
-                { "МСК+7", 10 }, { "МСК+8", 11 },
-                { "МСК+9", 12 },
+
+                { "UTC-1", -1 }, { "UTC", 0 },
+                { "UTC+1", 1 },  { "UTC+2", 2 },
+                { "UTC+3", 3 },  { "МСК-1", 2 },
+                { "МСК", 3 },    { "МСК+1", 4 },
+                { "МСК+2", 5 },  { "МСК+3", 6 },
+                { "МСК+4", 7 },  { "МСК+5", 8 },
+                { "МСК+6", 9 },  { "МСК+7", 10 },
+                { "МСК+8", 11 }, { "МСК+9", 12 },
             };
 
             return TimeZones[_config.TimeZone];
+        
+        }
+
+        private void SetTimeZone(string timeZone)
+        {
+            _config.TimeZone = timeZone;
+            _config.RewriteConfigFile();
         }
 
         private Config LoadAppSettings()
