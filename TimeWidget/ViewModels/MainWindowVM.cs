@@ -9,19 +9,95 @@ using System.Text.Json;
 using System.Collections.Generic;
 using TimeWidget.Models;
 using System.Windows.Media;
+using System.Diagnostics;
 using System.Windows;
 
 namespace TimeWidget.ViewModels
 {
     internal class MainWindowVM : INotifyPropertyChanged
     {
+        private Brush _foregroundColor;
+        private Brush _backgroundColor;
+        private Brush _borderColor;
+
+        private double _windowWidth;
+        private double _windowHeight;
+
+        private double _borderThickness;
+        private double _timeFontSize;
+
         private string? _currentTime;
         private Config _config;
 
-        public Brush ForegroundColor { get; set; }
-        public Brush BackgroundColor { get; set; }
+        public Brush ForegroundColor
+        {
+            get => _foregroundColor;
+            set
+            {
+                _foregroundColor = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public RelayCommand SetTimeZoneCommand { get; set; }
+        public Brush BackgroundColor
+        {
+            get => _backgroundColor;
+            set
+            {
+                _backgroundColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Brush BorderColor
+        {
+            get => _borderColor;
+            set
+            {
+                _borderColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double WindowWidth
+        {
+            get => _windowWidth;
+            set
+            {
+                _windowWidth = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double WindowHeight
+        {
+            get => _windowHeight;
+            set
+            {
+                _windowHeight = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double BorderThickness
+        {
+            get => _borderThickness;
+            set
+            {
+                _borderThickness = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double TimeFontSize
+        {
+            get => _timeFontSize;
+            set
+            {
+                _timeFontSize = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string? CurrentTime
         {
@@ -33,15 +109,15 @@ namespace TimeWidget.ViewModels
             }
         }
 
+        public RelayCommand SetTimeZoneCommand { get; set; }
+        public RelayCommand SetConfigCommand { get; set; }
+
         public MainWindowVM()
         {
             SetTimeZoneCommand = new RelayCommand(o => SetTimeZone((string) o));
-
-            _config = LoadAppSettings();
-
-            ForegroundColor = (new BrushConverter().ConvertFromString(_config.ForegroundColor) as Brush)!;
-            BackgroundColor = (new BrushConverter().ConvertFromString(_config.BackgroundColor) as Brush)!;
-
+            SetConfigCommand   = new RelayCommand(o => SetConfig());
+            
+            InitFields();
             GetDateTime();
         }
 
@@ -84,12 +160,41 @@ namespace TimeWidget.ViewModels
             _config.RewriteConfigFile();
         }
 
+        private async void SetConfig()
+        {
+            await Task.Run(() =>
+            {
+                string notepad = @"C:\Windows\System32\notepad.exe";
+                var process = Process.Start(notepad, "appsettings.json");
+                process.WaitForExit();
+            });
+
+            InitFields();
+        }
+
         private Config LoadAppSettings()
         {
-            var jsonNode = JsonNode.Parse(File.ReadAllText("appsettings.json"));
+            string json = File.ReadAllText("appsettings.json");
+            
+            var jsonNode = JsonNode.Parse(json);
             Config config = jsonNode.Deserialize<Config>()!;
 
             return config;
+        }
+
+        private void InitFields()
+        {
+            _config = LoadAppSettings();
+
+            WindowWidth = _config.WindowWidth;
+            WindowHeight = _config.WindowHeight;
+
+            ForegroundColor = (new BrushConverter().ConvertFromString(_config.ForegroundColor) as Brush)!;
+            BackgroundColor = (new BrushConverter().ConvertFromString(_config.BackgroundColor) as Brush)!;
+            BorderColor     = (new BrushConverter().ConvertFromString(_config.BorderColor) as Brush)!;
+
+            BorderThickness = _config.BorderThickness;
+            TimeFontSize    = _config.TimeFontSize;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

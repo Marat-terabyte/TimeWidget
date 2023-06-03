@@ -5,23 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:TimeWidget.ViewModels"
         mc:Ignorable="d"
-        ShowInTaskbar="False"
-        AllowsTransparency="True"
-        ResizeMode="NoResize"
-        WindowStyle="None"
-        Height="170" Width="350"
-        Activated="WindowActivated"
-        Loaded="WindowLoaded"
+        ShowInTaskbar="False" AllowsTransparency="True"
+        ResizeMode="NoResize" WindowStyle="None"
+        Activated="WindowActivated" Loaded="WindowLoaded"
         Background="{Binding BackgroundColor}">
-    
+
     <Window.DataContext>
-        <viewmodels:MainWindowVM></viewmodels:MainWindowVM>
+        <viewmodels:MainWindowVM/>
     </Window.DataContext>
 
     <Grid MouseDown="MoveWindow">
         <Grid.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="Часовой пояс">
+                <MenuItem Header="Time zone">
                     <MenuItem Header="UTC">
                         <MenuItem Header="UTC-1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC-1"/>
                         <MenuItem Header="UTC"   Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC"/>
@@ -44,17 +40,24 @@
                         <MenuItem Header="МСК+9" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+9"/>
                     </MenuItem>
                 </MenuItem>
+
+                <MenuItem Header="Open config" Command="{Binding SetConfigCommand}"></MenuItem>
             </ContextMenu>
         </Grid.ContextMenu>
-        
-        <TextBlock 
-            FontSize="73"
-            Foreground="{Binding ForegroundColor}"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            Margin="0 0 0 65"
-            Text="{Binding CurrentTime}">
-        </TextBlock>
+
+        <Border Height="{Binding WindowHeight}" Width="{Binding WindowWidth}"
+                BorderThickness="{Binding BorderThickness}"
+                BorderBrush="{Binding BorderColor}">
+            <StackPanel>
+                <TextBlock 
+                    FontSize="{Binding TimeFontSize}"
+                    Foreground="{Binding ForegroundColor}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="0 0 0 65"
+                    Text="{Binding CurrentTime}">
+                </TextBlock>
+            </StackPanel>
+        </Border>
     </Grid>
-    
 </Window>
