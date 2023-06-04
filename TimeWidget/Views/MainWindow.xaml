@@ -8,7 +8,8 @@
         ShowInTaskbar="False" AllowsTransparency="True"
         ResizeMode="NoResize" WindowStyle="None"
         Activated="WindowActivated" Loaded="WindowLoaded"
-        Background="{Binding BackgroundColor}">
+        Height="{Binding WindowHeight}" Width="{Binding WindowWidth}"
+        Background="Transparent">
 
     <Window.DataContext>
         <viewmodels:MainWindowVM/>
@@ -46,17 +47,26 @@
         </Grid.ContextMenu>
 
         <Border Height="{Binding WindowHeight}" Width="{Binding WindowWidth}"
+                Background="{Binding BackgroundColor}"
                 BorderThickness="{Binding BorderThickness}"
                 BorderBrush="{Binding BorderColor}">
-            <StackPanel>
+            <StackPanel VerticalAlignment="Center">
                 <TextBlock 
                     FontSize="{Binding TimeFontSize}"
                     Foreground="{Binding ForegroundColor}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    Margin="0 0 0 65"
                     Text="{Binding CurrentTime}">
                 </TextBlock>
+
+                <StackPanel Visibility="Visible" HorizontalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock FontSize="{Binding WeatherFontSize}" HorizontalAlignment="Center"
+                                   Foreground="{Binding ForegroundColor}" Text="{Binding WeatherPlace}"/>
+                        <TextBlock FontSize="{Binding WeatherFontSize}" Foreground="{Binding ForegroundColor}"
+                                   Text="{Binding Temperature}" Margin="10 0 0 0"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </Border>
     </Grid>

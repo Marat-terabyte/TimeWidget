@@ -10,15 +10,21 @@ using System.Collections.Generic;
 using TimeWidget.Models;
 using System.Windows.Media;
 using System.Diagnostics;
+using System.Windows.Threading;
+using HtmlAgilityPack;
 using System.Windows;
 
 namespace TimeWidget.ViewModels
 {
     internal class MainWindowVM : INotifyPropertyChanged
     {
+        private string _weatherUrl = "https://yandex.ru/pogoda/";
+
         private Brush _foregroundColor;
         private Brush _backgroundColor;
         private Brush _borderColor;
+
+        private int _weatherVisibility;
 
         private double _windowWidth;
         private double _windowHeight;
@@ -26,7 +32,12 @@ namespace TimeWidget.ViewModels
         private double _borderThickness;
         private double _timeFontSize;
 
-        private string? _currentTime;
+        private double _weatherFontSize;
+
+        private string _weatherPlace;
+        private string _temperature;
+
+        private string _currentTime;
         private Config _config;
 
         public Brush ForegroundColor
@@ -55,6 +66,16 @@ namespace TimeWidget.ViewModels
             set
             {
                 _borderColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int WeatherVisibility
+        {
+            get => _weatherVisibility;
+            set
+            {
+                _weatherVisibility = value;
                 OnPropertyChanged();
             }
         }
@@ -99,7 +120,27 @@ namespace TimeWidget.ViewModels
             }
         }
 
-        public string? CurrentTime
+        public double WeatherFontSize
+        {
+            get => _weatherFontSize;
+            set
+            {
+                _weatherFontSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string WeatherPlace
+        {
+            get => _weatherPlace;
+            set
+            {
+                _weatherPlace = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CurrentTime
         {
             get => _currentTime;
             set
@@ -108,6 +149,16 @@ namespace TimeWidget.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public string Temperature
+        {
+            get => _temperature;
+            set
+            {
+                _temperature = value;
+                OnPropertyChanged();
+            }
+        } 
 
         public RelayCommand SetTimeZoneCommand { get; set; }
         public RelayCommand SetConfigCommand { get; set; }
@@ -118,7 +169,9 @@ namespace TimeWidget.ViewModels
             SetConfigCommand   = new RelayCommand(o => SetConfig());
             
             InitFields();
+            
             GetDateTime();
+            ParseWeather();
         }
 
         private void GetDateTime()
@@ -127,12 +180,47 @@ namespace TimeWidget.ViewModels
 
             Task.Run(() =>
             {
-                DateTime time = DateTime.UtcNow.AddHours(hours);
-                CurrentTime = time.ToString("T");
-                Thread.Sleep(1000);
-                
-                GetDateTime();
+                while (true)
+                {
+                    DateTime time = DateTime.UtcNow.AddHours(hours);
+                    CurrentTime = time.ToString("T");
+                    Thread.Sleep(1000);
+                }
             });
+        }
+
+        private void ParseWeather()
+        {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        Temperature = GetTemperature(_weatherUrl);
+                    }
+                    catch { }
+
+                    Thread.Sleep(150000);
+                }
+            });
+        }
+
+        private string GetTemperature(string url)
+        {
+            string temperature = string.Empty;
+
+            try
+            {
+                var web = new HtmlWeb();
+                var doc = web.Load(url + WeatherPlace);
+                var nodes = doc.DocumentNode.SelectNodes("//span[@class='temp__value temp__value_with-unit']");
+
+                temperature = nodes[1].InnerText;
+            }
+            catch { }
+
+            return temperature; 
         }
 
         private int GetTimeZone()
@@ -186,15 +274,21 @@ namespace TimeWidget.ViewModels
         {
             _config = LoadAppSettings();
 
-            WindowWidth = _config.WindowWidth;
+            WindowWidth  = _config.WindowWidth;
             WindowHeight = _config.WindowHeight;
 
             ForegroundColor = (new BrushConverter().ConvertFromString(_config.ForegroundColor) as Brush)!;
             BackgroundColor = (new BrushConverter().ConvertFromString(_config.BackgroundColor) as Brush)!;
             BorderColor     = (new BrushConverter().ConvertFromString(_config.BorderColor) as Brush)!;
 
+            WeatherFontSize   = _config.WeatherFontSize;
+            WeatherPlace      = _config.WeatherPlace;
+            WeatherVisibility = _config.WeatherVisibility;
+
             BorderThickness = _config.BorderThickness;
             TimeFontSize    = _config.TimeFontSize;
+
+            Temperature = GetTemperature(_weatherUrl);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

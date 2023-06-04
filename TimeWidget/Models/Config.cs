@@ -11,13 +11,17 @@ namespace TimeWidget.Models
     {
         private string _backgroundColor = "Transparent";
         private string _foregroundColor = "#fff";
-        private string _borderColor = "Transparent";
-        private string _timeZone = "МСК";
+        private string _borderColor     = "Transparent";
+        private string _timeZone        = "МСК";
+        private string _weatherPlace    = "Moscow";
 
-        private double _windowWidth = 250;
-        private double _windowHeight = 170;
+        private int _weatherVisibility  = 0;
+
+        private double _windowWidth     = 250;
+        private double _windowHeight    = 170;
         private double _borderThickness = 1;
-        private double _timeFontSize = 72;
+        private double _timeFontSize    = 72;
+        private double _weatherFontSize = 22;
 
         [JsonPropertyName("window-width")]
         public double WindowWidth
@@ -42,6 +46,58 @@ namespace TimeWidget.Models
                     _windowHeight = 170;
                 else
                     _windowHeight = value;
+            }
+        }
+
+        [JsonPropertyName("border-thickness")]
+        public double BorderThickness
+        {
+            get { return _borderThickness; }
+            set
+            {
+                if (value == 0)
+                    _borderThickness = 1;
+                else
+                    _borderThickness = value;
+            }
+        }
+
+        [JsonPropertyName("time-font-size")]
+        public double TimeFontSize
+        {
+            get { return _timeFontSize; }
+            set
+            {
+                if (value == 0)
+                    _timeFontSize = 72;
+                else
+                    _timeFontSize = value;
+            }
+        }
+
+        [JsonPropertyName("weather-font-size")]
+        public double WeatherFontSize
+        {
+            get => _weatherFontSize;
+            set
+            {
+                if (value == 0)
+                    _weatherFontSize = 22;
+                else
+                    _weatherFontSize = value;
+            }
+        }
+
+        [JsonPropertyName("weather-visibility")]
+        public int WeatherVisibility
+        {
+            get => _weatherVisibility;
+            set
+            {
+                if (value > 2)
+                    _weatherVisibility = 0;
+                else
+                    _weatherVisibility = value;
             }
         }
 
@@ -84,32 +140,6 @@ namespace TimeWidget.Models
             }
         }
 
-        [JsonPropertyName("border-thickness")]
-        public double BorderThickness
-        {
-            get { return _borderThickness; }
-            set
-            {
-                if (value == 0)
-                    _borderThickness = 1;
-                else
-                    _borderThickness = value;
-            }
-        }
-
-        [JsonPropertyName("time-font-size")]
-        public double TimeFontSize
-        {
-            get { return _timeFontSize; }
-            set
-            {
-                if (value == 0)
-                    _timeFontSize = 72;
-                else
-                    _timeFontSize = value;
-            }
-        }
-
         [JsonPropertyName("time-zone")]
         public string TimeZone
         {
@@ -120,6 +150,19 @@ namespace TimeWidget.Models
                     _timeZone = "МСК";
                 else
                     _timeZone = value;
+            }
+        }
+
+        [JsonPropertyName("weather-place")]
+        public string WeatherPlace
+        {
+            get => _weatherPlace;
+            set
+            {
+                if (value is null)
+                    _weatherPlace = "Moscow";
+                else
+                    _weatherPlace = value;
             }
         }
 
