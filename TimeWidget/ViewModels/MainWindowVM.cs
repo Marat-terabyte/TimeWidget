@@ -197,30 +197,13 @@ namespace TimeWidget.ViewModels
                 {
                     try
                     {
-                        Temperature = GetTemperature(_weatherUrl);
+                        Temperature = Weather.GetTemperature(WeatherPlace);
                     }
                     catch { }
 
                     Thread.Sleep(150000);
                 }
             });
-        }
-
-        private string GetTemperature(string url)
-        {
-            string temperature = string.Empty;
-
-            try
-            {
-                var web = new HtmlWeb();
-                var doc = web.Load(url + WeatherPlace);
-                var nodes = doc.DocumentNode.SelectNodes("//span[@class='temp__value temp__value_with-unit']");
-
-                temperature = nodes[1].InnerText;
-            }
-            catch { }
-
-            return temperature; 
         }
 
         private int GetTimeZone()
@@ -288,7 +271,7 @@ namespace TimeWidget.ViewModels
             BorderThickness = _config.BorderThickness;
             TimeFontSize    = _config.TimeFontSize;
 
-            Temperature = GetTemperature(_weatherUrl);
+            Temperature = Weather.GetTemperature(_weatherUrl);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
