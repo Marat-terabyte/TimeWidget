@@ -271,7 +271,7 @@ namespace TimeWidget.ViewModels
             BorderThickness = _config.BorderThickness;
             TimeFontSize    = _config.TimeFontSize;
 
-            Temperature = Weather.GetTemperature(_weatherUrl);
+            Temperature = Weather.GetTemperature(WeatherPlace);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
