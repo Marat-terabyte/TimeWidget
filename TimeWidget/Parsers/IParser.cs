@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TimeWidget.ViewModels
+namespace TimeWidget.Parsers
 {
-    internal class MainWindowVM
+    internal interface IParser
     {
     }
 }

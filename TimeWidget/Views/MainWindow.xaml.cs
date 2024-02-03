@@ -1,10 +1,17 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
-using System.Windows.Interop;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
-namespace TimeWidget
+namespace TimeWidget.Views
 {
     public partial class MainWindow : Window
     {
@@ -26,7 +33,7 @@ namespace TimeWidget
         private static extern int GetWindowLong(IntPtr window, int index);
 
         private IntPtr Handle
-        { 
+        {
             get => new WindowInteropHelper(this).Handle;
         }
 

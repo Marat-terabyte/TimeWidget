@@ -3,71 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewmodels="clr-namespace:TimeWidget.ViewModels"
+        xmlns:local="clr-namespace:TimeWidget.Views"
         mc:Ignorable="d"
-        ShowInTaskbar="False" AllowsTransparency="True"
         ResizeMode="NoResize" WindowStyle="None"
+        ShowInTaskbar="False" AllowsTransparency="True"
         Activated="WindowActivated" Loaded="WindowLoaded"
-        Height="{Binding WindowHeight}" Width="{Binding WindowWidth}"
-        Background="Transparent">
-
-    <Window.DataContext>
-        <viewmodels:MainWindowVM/>
-    </Window.DataContext>
-
+        Title="MainWindow" Height="450" Width="800">
     <Grid MouseDown="MoveWindow">
-        <Grid.ContextMenu>
-            <ContextMenu>
-                <MenuItem Header="Time zone">
-                    <MenuItem Header="UTC">
-                        <MenuItem Header="UTC-1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC-1"/>
-                        <MenuItem Header="UTC"   Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC"/>
-                        <MenuItem Header="UTC+1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC+1"/>
-                        <MenuItem Header="UTC+2" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC+2"/>
-                        <MenuItem Header="UTC+3" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="UTC+3"/>
-                    </MenuItem>
 
-                    <MenuItem Header="Россия">
-                        <MenuItem Header="МСК-1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК-1"/>
-                        <MenuItem Header="МСК"   Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК"/>
-                        <MenuItem Header="МСК+1" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+1"/>
-                        <MenuItem Header="МСК+2" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+2"/>
-                        <MenuItem Header="МСК+3" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+3"/>
-                        <MenuItem Header="МСК+4" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+4"/>
-                        <MenuItem Header="МСК+5" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+5"/>
-                        <MenuItem Header="МСК+6" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+6"/>
-                        <MenuItem Header="МСК+7" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+7"/>
-                        <MenuItem Header="МСК+8" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+8"/>
-                        <MenuItem Header="МСК+9" Command="{Binding Path=SetTimeZoneCommand}" CommandParameter="МСК+9"/>
-                    </MenuItem>
-                </MenuItem>
-
-                <MenuItem Header="Open config" Command="{Binding SetConfigCommand}"></MenuItem>
-            </ContextMenu>
-        </Grid.ContextMenu>
-
-        <Border Height="{Binding WindowHeight}" Width="{Binding WindowWidth}"
-                Background="{Binding BackgroundColor}"
-                BorderThickness="{Binding BorderThickness}"
-                BorderBrush="{Binding BorderColor}">
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock 
-                    FontSize="{Binding TimeFontSize}"
-                    Foreground="{Binding ForegroundColor}"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Text="{Binding CurrentTime}">
-                </TextBlock>
-
-                <StackPanel Visibility="Visible" HorizontalAlignment="Center">
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <TextBlock FontSize="{Binding WeatherFontSize}" HorizontalAlignment="Center"
-                                   Foreground="{Binding ForegroundColor}" Text="{Binding WeatherPlace}"/>
-                        <TextBlock FontSize="{Binding WeatherFontSize}" Foreground="{Binding ForegroundColor}"
-                                   Text="{Binding Temperature}" Margin="10 0 0 0"></TextBlock>
-                    </StackPanel>
-                </StackPanel>
-            </StackPanel>
-        </Border>
     </Grid>
 </Window>
