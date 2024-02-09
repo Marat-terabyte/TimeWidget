@@ -13,7 +13,7 @@ namespace TimeWidget.Parsers
     {
         private static string _weatherUrl = @"https://yandex.ru/pogoda/";
 
-        public Weather ParseWeather()
+        public Weather? ParseWeather()
         {
             Weather weather = new Weather();
 
@@ -27,7 +27,7 @@ namespace TimeWidget.Parsers
             }
             catch { }
 
-            return weather;
+            return null;
         }
     }
 }

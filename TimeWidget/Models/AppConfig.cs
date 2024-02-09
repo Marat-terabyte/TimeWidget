@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TimeWidget.Models
 {
-    internal class AppConfig
+    internal class AppConfig : INotifyPropertyChanged
     {
         private string _backgroundColor = "Transparent";
         private string _foregroundColor = "#fff";
@@ -33,6 +35,7 @@ namespace TimeWidget.Models
                     value = 450;
 
                 _windowWidth = value;
+                OnPropertyChanged();
             }
         }
 
@@ -46,6 +49,7 @@ namespace TimeWidget.Models
                     value = 170;
 
                 _windowHeight = value;
+                OnPropertyChanged();
             }
         }
 
@@ -59,6 +63,7 @@ namespace TimeWidget.Models
                     value = 1;
 
                 _borderThickness = value;
+                OnPropertyChanged();
             }
         }
 
@@ -72,6 +77,7 @@ namespace TimeWidget.Models
                     value = 72;
 
                 _timeFontSize = value;
+                OnPropertyChanged();
             }
         }
 
@@ -85,6 +91,7 @@ namespace TimeWidget.Models
                     value = 30;
 
                 _weatherFontSize = value;
+                OnPropertyChanged();
             }
         }
 
@@ -98,6 +105,7 @@ namespace TimeWidget.Models
                     value = 0;
 
                 _weatherVisibility = value;
+                OnPropertyChanged();
             }
         }
 
@@ -111,6 +119,7 @@ namespace TimeWidget.Models
                     value = "Transparent";
 
                 _backgroundColor = value;
+                OnPropertyChanged();
             }
         }
 
@@ -124,6 +133,7 @@ namespace TimeWidget.Models
                     value = "#fff";
 
                 _foregroundColor = value;
+                OnPropertyChanged();
             }
         }
 
@@ -137,6 +147,7 @@ namespace TimeWidget.Models
                     value = "#fff";
 
                 _borderColor = value;
+                OnPropertyChanged();
             }
         }
 
@@ -150,6 +161,7 @@ namespace TimeWidget.Models
                     value = "МСК";
 
                 _timeZone = value;
+                OnPropertyChanged();
             }
         }
 
@@ -163,8 +175,12 @@ namespace TimeWidget.Models
                     value = "Moscow";
 
                 _weatherPlace = value;
+                OnPropertyChanged();
             }
         }
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null!) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

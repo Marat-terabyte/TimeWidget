@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace TimeWidget.Models
 {
@@ -24,23 +26,64 @@ namespace TimeWidget.Models
             }
             else
             {
-                AppConfig config = ReadAppSettings();
+                if (!CheckAppSettings())
+                {
+                    WriteAppSettings();
+                }
 
-                Config.BackgroundColor = config.BackgroundColor;
-                Config.ForegroundColor = config.ForegroundColor;
-                Config.BorderColor = config.BorderColor;
-                Config.TimeZone = config.TimeZone;
-                Config.WeatherPlace = config.WeatherPlace;
-                Config.WeatherVisibility = config.WeatherVisibility;
-                Config.WindowWidth = config.WindowWidth;
-                Config.WindowHeight = config.WindowHeight;
-                Config.BorderThickness = config.BorderThickness;
-                Config.TimeFontSize = config.TimeFontSize;
-                Config.WeatherFontSize = config.WeatherFontSize;
+                Update();
             }
         }
 
         public AppConfig ReadAppSettings() => JsonSerializer.Deserialize<AppConfig>(File.ReadAllText(_settingsFile))!;
+
+        public void Update()
+        {
+            AppConfig config = ReadAppSettings();
+
+            Config.BackgroundColor = config.BackgroundColor;
+            Config.ForegroundColor = config.ForegroundColor;
+            Config.BorderColor = config.BorderColor;
+            Config.TimeZone = config.TimeZone;
+            Config.WeatherPlace = config.WeatherPlace;
+            Config.WeatherVisibility = config.WeatherVisibility;
+            Config.WindowWidth = config.WindowWidth;
+            Config.WindowHeight = config.WindowHeight;
+            Config.BorderThickness = config.BorderThickness;
+            Config.TimeFontSize = config.TimeFontSize;
+            Config.WeatherFontSize = config.WeatherFontSize;
+        }
+
+        public bool CheckAppSettingsWithResult(ref string? message)
+        {
+            try
+            {
+                ReadAppSettings();
+                message = null;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+            }
+
+            return false;
+        }
+
+        public bool CheckAppSettings()
+        {
+            try
+            {
+                ReadAppSettings();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         public void WriteAppSettings()
         {
@@ -49,6 +92,14 @@ namespace TimeWidget.Models
             {
                 fs.Write(Encoding.UTF8.GetBytes(json));
             }
+        }
+
+        public async Task OpenAppSettings()
+        {
+
+            string notepad = @"C:\Windows\System32\notepad.exe";
+            var process = Process.Start(notepad, "appsettings.json");
+            await process.WaitForExitAsync();
         }
     }
 }

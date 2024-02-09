@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using TimeWidget.Command;
 using TimeWidget.Models;
 using TimeWidget.Parsers;
+using TimeWidget.Views;
 
 namespace TimeWidget.ViewModels
 {
@@ -15,9 +20,10 @@ namespace TimeWidget.ViewModels
         private string _currentTime;
         private Weather _currentWeather;
 
+        public ICommand EditAppSettingsCommand {  get; set; }
         public AppSettings Settings { get; set; }
         public IParser WeatherParser { get; set; }
-
+        
         public string CurrentTime
         {
             get => _currentTime;
@@ -41,10 +47,38 @@ namespace TimeWidget.ViewModels
         public MainWindowVM()
         {
             Settings = new AppSettings();
+            EditAppSettingsCommand = new RelayCommand(o => EditAppSettings());
             WeatherParser = new YandexWeatherParser();
 
             GetTime();
             GetWeather();
+        }
+
+        public async void EditAppSettings()
+        {
+            while (true)
+            {
+                await Settings.OpenAppSettings();
+
+                string? errorMessage = null;
+                
+                bool isValidAppSettings = Settings.CheckAppSettingsWithResult(ref errorMessage);
+                if (isValidAppSettings)
+                {
+                    Settings.Update();
+                    await Task.Run(() => { CurrentWeather = WeatherParser.ParseWeather(); });
+                    break;
+
+                }
+
+                var result = MessageBox.Show(errorMessage + "\n\nRewrite automatically app settings?", "Error", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Settings.WriteAppSettings();
+                    Settings.Update();
+                    break;
+                }
+            }
         }
 
         public void GetWeather()
@@ -53,7 +87,10 @@ namespace TimeWidget.ViewModels
             {
                 while (true)
                 {
-                    CurrentWeather = WeatherParser.ParseWeather();
+                    var weather = WeatherParser.ParseWeather();
+                    if (weather != null)
+                        CurrentWeather = weather;
+
                     Thread.Sleep(1_800_000); // 30 min
                 }
             });

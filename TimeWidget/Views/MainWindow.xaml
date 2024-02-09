@@ -7,14 +7,20 @@
         mc:Ignorable="d"
         Activated="WindowActivated" ShowInTaskbar="False" Loaded="WindowLoaded"
         AllowsTransparency="True"
-        WindowStyle="None"
+        WindowStyle="None" ResizeMode="NoResize"
         Height="{Binding Settings.Config.WindowHeight}" Width="{Binding Settings.Config.WindowWidth}"
-        Background="{Binding Settings.Config.BackgroundColor}">
+        Background="Transparent">
     <Window.DataContext>
         <viewmodels:MainWindowVM/>
     </Window.DataContext>
 
-    <Grid MouseDown="MoveWindow">
+    <Grid MouseDown="MoveWindow" Width="{Binding Settings.Config.WindowWidth}">
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Open app settings" Command="{Binding EditAppSettingsCommand}"></MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
+
         <Border Height="{Binding Settings.Config.WindowHeight}" Width="{Binding Settings.Config.WindowWidth}"
                 Background="{Binding Settings.Config.BackgroundColor}"
                 BorderThickness="{Binding Settings.Config.BorderThickness}"
