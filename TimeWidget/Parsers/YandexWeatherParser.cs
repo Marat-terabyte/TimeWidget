@@ -23,7 +23,7 @@ namespace TimeWidget.Parsers
                 var doc = web.Load(_weatherUrl);
                 var nodes = doc.DocumentNode.SelectNodes("//span[@class='temp__value temp__value_with-unit']");
 
-                weather.Temperature = nodes?[1].InnerText;
+                weather.Temperature = nodes?[1].InnerText ?? string.Empty;
             }
             catch { }
 

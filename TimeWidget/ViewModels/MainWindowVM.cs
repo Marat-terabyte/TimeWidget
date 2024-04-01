@@ -18,7 +18,7 @@ namespace TimeWidget.ViewModels
     internal class MainWindowVM : INotifyPropertyChanged
     {
         private string _currentTime;
-        private Weather _currentWeather;
+        private Weather? _currentWeather;
 
         public ICommand EditAppSettingsCommand {  get; set; }
         public AppSettings Settings { get; set; }
@@ -34,7 +34,7 @@ namespace TimeWidget.ViewModels
             }
         }
 
-        public Weather CurrentWeather
+        public Weather? CurrentWeather
         {
             get => _currentWeather;
             set
@@ -48,7 +48,7 @@ namespace TimeWidget.ViewModels
         {
             Settings = new AppSettings();
             EditAppSettingsCommand = new RelayCommand(o => EditAppSettings());
-            WeatherParser = new YandexWeatherParser();
+            WeatherParser = new CacheWeatherParser(new YandexWeatherParser());
 
             GetTime();
             GetWeather();
@@ -87,10 +87,8 @@ namespace TimeWidget.ViewModels
             {
                 while (true)
                 {
-                    var weather = WeatherParser.ParseWeather();
-                    if (weather != null)
-                        CurrentWeather = weather;
-
+                    _currentWeather = WeatherParser.ParseWeather();
+                    
                     Thread.Sleep(1_800_000); // 30 min
                 }
             });

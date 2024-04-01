@@ -9,6 +9,6 @@ namespace TimeWidget.Parsers
 {
     internal interface IParser
     {
-        public Weather ParseWeather();
+        public Weather? ParseWeather();
     }
 }
